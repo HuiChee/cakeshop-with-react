@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import '../styles/navbar.css'
 
 const Navbar = () => {
@@ -7,8 +7,8 @@ const Navbar = () => {
             <ul className="top">
                 <li className="title">HC Cakeshop</li>
                 <div className="right">
-                    <a className="shopping_cart" />
-                    <a className="user" />
+                    <div className="shopping_cart" />
+                    <div className="user" />
                 </div>
             </ul>
         </nav>
