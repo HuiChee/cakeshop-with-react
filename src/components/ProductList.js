@@ -3,15 +3,15 @@ import "../styles/ProductList.css"
 
 const ProductList = ({filter, onResetFilter}) => {
     const products = [
-        {name: "桂花米酒戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake1.jpg"},
-        {name: "莓果戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake2.jpg"},
-        {name: "巧克力戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake3.jpg"},
-        {name: "抹茶戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake4.jpg"},
-        {name: "莓果松饼", type: '松饼', price: "110元", image: "/images/product/cake5.jpg"},
-        {name: "草莓可颂布丁", type: '布丁', price: "160元", image: "/images/product/cake6.jpg"},
-        {name: "草莓可可夹心蛋糕", type: '夹心蛋糕', price: "140元", image: "/images/product/cake7.jpg"},
-        {name: "草莓坚果可可松饼", type: '松饼', price: "120元", image: "/images/product/cake8.jpg"},
-        {name: "香蕉脆皮吐司", type: '吐司', price: "120元", image: "/images/product/cake9.jpg"}
+        {name: "桂花米酒戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake1.jpg", index:"0"},
+        {name: "莓果戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake2.jpg", index:"1"},
+        {name: "巧克力戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake3.jpg", index:"2"},
+        {name: "抹茶戚风蛋糕", type: '戚风蛋糕', price: "130元", image: "/images/product/cake4.jpg", index:"3"},
+        {name: "莓果松饼", type: '松饼', price: "110元", image: "/images/product/cake5.jpg", index:"4"},
+        {name: "草莓可颂布丁", type: '布丁', price: "160元", image: "/images/product/cake6.jpg", index:"5"},
+        {name: "草莓可可夹心蛋糕", type: '夹心蛋糕', price: "140元", image: "/images/product/cake7.jpg", index:"6"},
+        {name: "草莓坚果可可松饼", type: '松饼', price: "120元", image: "/images/product/cake8.jpg", index:"7"},
+        {name: "香蕉脆皮吐司", type: '吐司', price: "120元", image: "/images/product/cake9.jpg", index:"8"}
     ];
 
     const filteredProducts = filter ? products.filter(product => product.type === filter) : products;
@@ -67,6 +67,16 @@ const ProductList = ({filter, onResetFilter}) => {
         setCurrentPage(1);
     }, [filter]);
 
+    //const navigate = useNavigate();
+
+    const handleViewProduct = (productId) => {
+        //navigate(`/ProductDetail/${productId}`);
+        const filterProduct = filteredProducts[(currentPage - 1) * itemsPerPage + productId];
+        //console.log(filterProduct);
+
+        window.open(`/ProductDetail/${filterProduct.index}`, '_blank');
+    };
+
     return (
         <div>
             <div className='product-display'>
@@ -78,7 +88,12 @@ const ProductList = ({filter, onResetFilter}) => {
                                 <h5 className='product-info'>{product.name}</h5>
                                 <div className='container'>
                                     <h5 className='product-price'>{product.price}</h5>
-                                    <button className='buy' type='button'>查看</button>
+                                    <button 
+                                    className='buy' 
+                                    type='button'
+                                    onClick={() => handleViewProduct(index)}>
+                                        查看
+                                    </button>
                                 </div>
                             </div>
                         </div>

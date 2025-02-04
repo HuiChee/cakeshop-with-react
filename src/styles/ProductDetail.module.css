@@ -1,0 +1,42 @@
+.productDetailContainer{
+    display: flex;
+}
+
+.productDetail{
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    gap: 20px;
+}
+
+.productImage{
+    margin-top: 60px;
+    margin-left: 40px;
+    margin-bottom: 20px;
+    width: 35%;
+    height: auto;
+}
+
+.productInfo{
+    max-width: 500px;
+}
+
+.productName{
+    margin-top: 55px;
+    margin-bottom: 0px;
+}
+
+.productDescription{
+    margin-top: 0px;
+    white-space: pre-line;
+}
+
+.buy{
+    font-size: 20px;
+    padding: 5px 10px 5px 10px;
+    margin-top: 20px;
+}
+
+.buy:hover{
+    color: blue;
+}

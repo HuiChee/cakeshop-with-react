@@ -5,11 +5,16 @@ import Banner from './components/Banner';
 import Contact from './components/Contact';
 import ProductFilter from './components/ProductFilter';
 import ProductList from './components/ProductList';
+import ProductDetail from './components/ProductDetail'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
   const [filter, setFilter] = useState('');
+
+  const match = useMatch('/ProductDetail/:productId');
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -22,12 +27,23 @@ function App() {
   return (
     <>
       <Navbar />
-      <Banner />
+      {!match && <Banner />}
       <ProductFilter onFilterChange={handleFilterChange} />
-      <ProductList filter={filter} onResetFilter={handleResetFilter} />
+      <Routes>
+        <Route path='/' element={<ProductList filter={filter} onResetFilter={handleResetFilter} />} />
+        <Route path='/ProductDetail/:productId' element={<ProductDetail />} /> 
+      </Routes>
       <Contact />
     </>
   );
 }
 
-export default App;
+function Root() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  )
+}
+
+export default Root;
