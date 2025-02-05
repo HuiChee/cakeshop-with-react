@@ -14,11 +14,11 @@ const ProductFilter = ({onFilterChange}) => {
                     选择商品
                 </button>
                 <div className="dropdown-menu">
-                    <a className="dropdown-item" href="#" onClick={() => handleChange({ target: { value: '戚风蛋糕'}})}>戚风蛋糕</a>
-                    <a className="dropdown-item" href="#" onClick={() => handleChange({ target: { value: '松饼'}})}>松饼</a>
-                    <a className="dropdown-item" href="#" onClick={() => handleChange({ target: { value: '夹心蛋糕'}})}>夹心蛋糕</a>
-                    <a className="dropdown-item" href="#" onClick={() => handleChange({ target: { value: '布丁'}})}>布丁</a>
-                    <a className="dropdown-item" href="#" onClick={() => handleChange({ target: { value: '吐司'}})}>吐司</a>
+                    <button onClick={() => handleChange({ target: { value: '戚风蛋糕'}})}>戚风蛋糕</button>
+                    <button onClick={() => handleChange({ target: { value: '松饼'}})}>松饼</button>
+                    <button onClick={() => handleChange({ target: { value: '夹心蛋糕'}})}>夹心蛋糕</button>
+                    <button onClick={() => handleChange({ target: { value: '布丁'}})}>布丁</button>
+                    <button onClick={() => handleChange({ target: { value: '吐司'}})}>吐司</button>
                 </div>
             </div>
         </div>

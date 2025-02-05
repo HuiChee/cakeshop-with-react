@@ -54,6 +54,16 @@ nav{
     margin-right: 15px;
 }
 
+.user1{
+    background-image: url('/src/images/user1.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 40px;
+    width: 40px;
+    display: block;
+    margin-right: 15px;
+}
+
 .user:hover{
     background-image: url('/src/images/user_hover.png');
 }
