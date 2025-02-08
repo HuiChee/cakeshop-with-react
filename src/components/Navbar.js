@@ -47,6 +47,7 @@ const Navbar = ({ user, onSignOut }) => {
 
     const navigate = useNavigate();
     const isMemberPage = useMatch('/MemberPage');
+    const isAddressPage = useMatch('/AddressPage');
 
     return(
         <nav>
@@ -70,8 +71,18 @@ const Navbar = ({ user, onSignOut }) => {
 
             {showMenu && !isMemberPage && (
                 <div className={styles.dropdownMenu}>
-                    <button onClick={() => {console.log("navigate to memberpage"); navigate('/MemberPage'); toggleMenu();}}>会员界面</button>
-                    <button onClick={() => {onSignOut(); toggleMenu();}}>登出</button>
+                    {!isAddressPage ? (
+                        <>
+                            <button onClick={() => {console.log("navigate to memberpage"); navigate('/MemberPage'); toggleMenu();}}>会员界面</button>
+                            <button onClick={() => {onSignOut(); toggleMenu();}}>登出</button>
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => {navigate('/'); toggleMenu();}}>主页面</button>
+                            <button onClick={() => {console.log("navigate to memberpage"); navigate('/MemberPage'); toggleMenu();}}>会员界面</button>
+                            <button onClick={() => {onSignOut(); toggleMenu();}}>登出</button>
+                        </>
+                    )}
                 </div>
             )}
 
