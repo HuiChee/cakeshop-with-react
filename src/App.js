@@ -6,6 +6,7 @@ import Contact from './components/Contact';
 import ProductFilter from './components/ProductFilter';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail'
+import MemberPage from './components/MemberPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useMatch } from 'react-router-dom';
 import './firebase'
@@ -37,6 +38,7 @@ function App() {
   const [filter, setFilter] = useState('');
 
   const match = useMatch('/ProductDetail/:productId');
+  const isMemberPage = useMatch('/MemberPage');
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -49,13 +51,14 @@ function App() {
   return (
     <>
       <Navbar user={user} onSignOut={handleSignOut} />
-      {!match && <Banner />}
+      {!isMemberPage && !match && <Banner />}
       <ProductFilter onFilterChange={handleFilterChange} />
       <Routes>
+        <Route path='/MemberPage' element={<MemberPage />} />
         <Route path='/' element={<ProductList filter={filter} onResetFilter={handleResetFilter} />} />
         <Route path='/ProductDetail/:productId' element={<ProductDetail />} /> 
       </Routes>
-      <Contact />
+      {!isMemberPage && <Contact />}
     </>
   );
 }

@@ -1,12 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db, setDoc, doc } from '../firebase';
+import {cloudinary} from './Cloudinary';
 import styles from '../styles/auth.module.css'
 
 const Auth = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [avatar, setAvatar] = useState(null);
     const [error, setError] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
 
@@ -14,9 +17,28 @@ const Auth = ({ isOpen, onClose }) => {
         e.preventDefault();
         try {
             if(isSignUp) {
-                await createUserWithEmailAndPassword(auth, email, password);
-                alert("注册成功");
-                onClose();
+                if(avatar) {
+                    const avatarURL = await cloudinary(avatar);
+
+                    if(!avatarURL) {
+                        alert('头像上传失败');
+                        return;
+                    }
+
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    await setDoc(doc(db, 'users', user.uid), {
+                        username,
+                        avatarURL,
+                        email: user.email,
+                    });
+
+                    alert("注册成功");
+                    onClose();
+                } else {
+                    alert('请上传头像');
+                }
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
                 alert("登录成功");
@@ -52,6 +74,27 @@ const Auth = ({ isOpen, onClose }) => {
                         required
                         />
                     </div>
+                    {isSignUp && (
+                        <>
+                            <div>
+                                <label>用户名：</label>
+                                <input
+                                type='text'
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                />
+                            </div>
+                            <div>
+                                <label>头像：</label>
+                                <input
+                                type='file'
+                                accept='image/*'
+                                onChange={(e) => setAvatar(e.target.files[0])}
+                                />
+                            </div>
+                        </>
+                    )}
                     {error && <p style={{color: "red"}}>{error}</p>}
                     <button type='submit'>{isSignUp ? "注册" : "登录"}</button>
                 </form>
