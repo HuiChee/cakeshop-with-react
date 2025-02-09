@@ -80,7 +80,7 @@ const Navbar = ({ user, onSignOut }) => {
                         <>
                             <button onClick={() => {navigate('/'); toggleMenu();}}>主页面</button>
                             <button onClick={() => {console.log("navigate to memberpage"); navigate('/MemberPage'); toggleMenu();}}>会员界面</button>
-                            <button onClick={() => {onSignOut(); toggleMenu();}}>登出</button>
+                            <button onClick={() => {navigate('/'); onSignOut(); toggleMenu();}}>登出</button>
                         </>
                     )}
                 </div>

@@ -4,11 +4,14 @@ import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import styles from '../styles/addressPage.module.css'
+import { Timestamp } from "firebase/firestore";
 
 const AddressPage = () => {
     const [userData, setUserData] = useState(null);
     const [addresses, setAddresses] = useState([]);
     const [newAddress, setNewAddress] = useState('');
+    const [recipientName, setRecipientName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -27,24 +30,35 @@ const AddressPage = () => {
     }, []);
 
     const handleAddAddress = async() => {
-        if(newAddress.trim() === '') return;
+        if(newAddress.trim() === '' || recipientName.trim() === '' || phoneNumber.trim() === '') return;
 
         const userDocRef = doc(db, 'users', auth.currentUser.uid);
+        
+        const newAddressData = {
+            address: newAddress,
+            recipientName: recipientName,
+            phoneNumber: phoneNumber,
+            timestamp: Timestamp.fromDate(new Date())
+        };
+        
         await updateDoc(userDocRef, {
-            addresses: arrayUnion(newAddress)
+            addresses: arrayUnion(newAddressData)
         });
 
-        setAddresses((prevAddresses) => [...prevAddresses, newAddress]);
+        setAddresses((prevAddresses) => [...prevAddresses, newAddressData]);
         setNewAddress('');
+        setRecipientName('');
+        setPhoneNumber('');
+        setIsEditing(false);
     };
 
-    const handleDeleteAddress = async(address) => {
+    const handleDeleteAddress = async(addressToDelete) => {
         const userDocRef = doc(db, 'users', auth.currentUser.uid);
         await updateDoc(userDocRef, {
-            addresses: arrayRemove(address)
+            addresses: arrayRemove(addressToDelete)
         });
 
-        setAddresses((prevAddresses) => prevAddresses.filter(addr => addr !== address));
+        setAddresses((prevAddresses) => prevAddresses.filter(addr => addr !== addressToDelete));
     };
 
     if(!userData){
@@ -60,7 +74,9 @@ const AddressPage = () => {
                 ) : (
                     addresses.map((address, index) => (
                         <div key={index} className={styles.address}>
-                            <p>{address}</p>
+                            <p>地址：{address.address}</p>
+                            <p>收件人： {address.recipientName}</p>
+                            <p>手机号: {address.phoneNumber}</p>
                             <button onClick={() => handleDeleteAddress(address)}>删除</button>
                         </div>
                     ))
@@ -80,6 +96,18 @@ const AddressPage = () => {
                     value={newAddress}
                     onChange={(e) => setNewAddress(e.target.value)}
                     placeholder="填写新的地址"
+                    />
+                    <input
+                    type="text"
+                    value={recipientName}
+                    onChange={(e) => setRecipientName(e.target.value)}
+                    placeholder="收件人姓名"
+                    />
+                    <input
+                    type="text"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="手机号"
                     />
                     <button onClick={handleAddAddress}>保存</button>
                     <button onClick={() => setIsEditing(false)}>取消</button>
