@@ -8,6 +8,7 @@ import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail'
 import MemberPage from './components/MemberPage';
 import AddressPage from './components/AddressPage';
+import CartPage from './components/CartPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useMatch } from 'react-router-dom';
 import './firebase'
@@ -41,6 +42,7 @@ function App() {
   const match = useMatch('/ProductDetail/:productId');
   const isMemberPage = useMatch('/MemberPage');
   const isAddressPage = useMatch('/AddressPage');
+  const isCartPage = useMatch('/CartPage');
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -53,15 +55,16 @@ function App() {
   return (
     <>
       <Navbar user={user} onSignOut={handleSignOut} />
-      {!isMemberPage && !isAddressPage && !match && <Banner />}
+      {!isMemberPage && !isAddressPage && !isCartPage && !match && <Banner />}
       <ProductFilter onFilterChange={handleFilterChange} />
       <Routes>
+        <Route path='/CartPage' element={<CartPage />} />
         <Route path='/MemberPage' element={<MemberPage />} />
         <Route path='/AddressPage' element={<AddressPage />} />
         <Route path='/' element={<ProductList filter={filter} onResetFilter={handleResetFilter} />} />
         <Route path='/ProductDetail/:productId' element={<ProductDetail />} /> 
       </Routes>
-      {!isMemberPage && !isAddressPage && <Contact />}
+      {!isMemberPage && !isAddressPage && !isCartPage && <Contact />}
     </>
   );
 }

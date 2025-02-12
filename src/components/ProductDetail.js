@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 import styles from "../styles/ProductDetail.module.css";
+import { onAuthStateChanged } from 'firebase/auth';
 
 const ProductDetail = () => {
     const { productId } = useParams();
     //console.log(productId);
     const [product, setProduct ] = useState(null);
+    const [user, setUser] = useState(null);
 
     const products = useMemo(() => [
         {name: "桂花米酒戚风蛋糕", price: "130元", image: "/images/product/cake1.jpg", description: "材料详情：花蜜，干桂花，牛奶\n产品详情：需放冰箱保存，保质期3天"},
@@ -22,7 +26,28 @@ const ProductDetail = () => {
     useEffect(() => {
         const product = products[parseInt(productId, 10)];
         setProduct(product);
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+        return () => unsubscribe();
     }, [productId, products]);
+
+    const addToCart = async() => {
+        if(!user){
+            alert("请先登录！");
+            return;
+        }
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if(userDoc.exists()) {
+            await updateDoc(userDocRef, {
+                cart: arrayUnion(product)
+            });
+            alert("商品已添加到购物车");
+        }
+    };
 
     if(!product) {
         return <p>加载中...</p>;
@@ -36,7 +61,7 @@ const ProductDetail = () => {
                     <h2 id='product-name' className={styles.productName}>{product.name}</h2>
                     <h3 id='product-price' className={styles.productPrice}>{product.price}</h3>
                     <p id='product-description' className={styles.productDescription}>{product.description}</p>
-                    <button className={styles.buy} type='button'>放入购物车</button>
+                    <button className={styles.buy} type='button' onClick={addToCart}>放入购物车</button>
                 </div>
             </div>
         </div>

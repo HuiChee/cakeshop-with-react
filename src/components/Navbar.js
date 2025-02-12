@@ -15,6 +15,7 @@ const Navbar = ({ user, onSignOut }) => {
     };
 
     const [userData, setUserData] = useState(null);
+    const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async(user) => {
@@ -22,13 +23,20 @@ const Navbar = ({ user, onSignOut }) => {
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 if(userDoc.exists()) {
                     setUserData(userDoc.data());
+                    const cartItems = userDoc.data().cart || [];
+                    setCartCount(cartItems.length);
                 }
             } else {
                 setUserData(null);
+                setCartCount(0);
             }
         });
         return () => unsubscribe();
     }, []);
+
+    const handleCartClick = () => {
+        window.open(`/CartPage`);
+    }
 
     const [showMenu, setShowMenu] = useState(false);
 
@@ -48,13 +56,22 @@ const Navbar = ({ user, onSignOut }) => {
     const navigate = useNavigate();
     const isMemberPage = useMatch('/MemberPage');
     const isAddressPage = useMatch('/AddressPage');
+    const isCartPage = useMatch('/CartPage');
 
     return(
         <nav>
             <ul className="top">
                 <li className="title">HC Cakeshop</li>
                 <div className="right">
-                    <div className="shopping_cart" />
+                    {!isCartPage ? (
+                        <div className="shopping_cart" onClick={handleCartClick}>
+                            {cartCount > 0 && (
+                                <span className='cart-count'>{cartCount}</span>
+                            )}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     <div>
                         {user ? (
                             !isMemberPage && userData ? (
