@@ -3,29 +3,40 @@ import { useMatch, useNavigate } from 'react-router-dom';
 import Auth from './Auth'
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import '../styles/navbar.css'
 import styles from '../styles/UserDropdownMenu.module.css'
 
 const Navbar = ({ user, onSignOut }) => {
     const [showModal, setShowModal] = useState(false);
+    const [userData, setUserData] = useState(null);
+    const [cartCount, setCartCount] = useState(0);
 
     const toggleModal = () => {
         setShowModal(!showModal);
     };
 
-    const [userData, setUserData] = useState(null);
-    const [cartCount, setCartCount] = useState(0);
-
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async(user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if(user) {
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                if(userDoc.exists()) {
+                const userDocRef = doc(db, 'users', user.uid);
+                /*if(userDoc.exists()) {
                     setUserData(userDoc.data());
                     const cartItems = userDoc.data().cart || [];
                     setCartCount(cartItems.length);
-                }
+                }*/
+               getDoc(userDocRef).then((userDoc) => {
+                    if(userDoc.exists()) {
+                        setUserData(userDoc.data());
+                    }
+               });
+
+               onSnapshot(userDocRef, (docSnapshot) => {
+                    if(docSnapshot.exists()) {
+                        const cartItems = docSnapshot.data().cart || [];
+                        setCartCount(cartItems.length);
+                    }
+               });
             } else {
                 setUserData(null);
                 setCartCount(0);
