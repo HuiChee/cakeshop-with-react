@@ -8,6 +8,7 @@ import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail'
 import MemberPage from './components/MemberPage';
 import AddressPage from './components/AddressPage';
+import OrderHistoryPage from './components/OrderHistoryPage';
 import CartPage from './components/CartPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useMatch } from 'react-router-dom';
@@ -42,6 +43,7 @@ function App() {
   const match = useMatch('/ProductDetail/:productId');
   const isMemberPage = useMatch('/MemberPage');
   const isAddressPage = useMatch('/AddressPage');
+  const isOrderHistoryPage = useMatch('/OrderHistoryPage');
   const isCartPage = useMatch('/CartPage');
 
   const handleFilterChange = (newFilter) => {
@@ -55,16 +57,17 @@ function App() {
   return (
     <>
       <Navbar user={user} onSignOut={handleSignOut} />
-      {!isMemberPage && !isAddressPage && !isCartPage && !match && <Banner />}
+      {!isMemberPage && !isAddressPage && !isOrderHistoryPage && !isCartPage && !match && <Banner />}
       <ProductFilter onFilterChange={handleFilterChange} />
       <Routes>
         <Route path='/CartPage' element={<CartPage />} />
         <Route path='/MemberPage' element={<MemberPage />} />
         <Route path='/AddressPage' element={<AddressPage />} />
+        <Route path='/OrderHistoryPage' element={<OrderHistoryPage />} />
         <Route path='/' element={<ProductList filter={filter} onResetFilter={handleResetFilter} />} />
         <Route path='/ProductDetail/:productId' element={<ProductDetail />} /> 
       </Routes>
-      {!isMemberPage && !isAddressPage && !isCartPage && <Contact />}
+      {!isMemberPage && !isAddressPage && !isOrderHistoryPage && !isCartPage && <Contact />}
     </>
   );
 }

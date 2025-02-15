@@ -32,6 +32,10 @@ const MemberPage = () => {
         navigate('/AddressPage');
     }
 
+    const handleOrderClick = () => {
+        navigate('/OrderHistoryPage');
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.avatarContainer}>
@@ -44,7 +48,7 @@ const MemberPage = () => {
             <div className={styles.username}>{userData.username}</div>
             <div className={styles.buttonContainer}>
                 <button className={styles.button} onClick={handleAddressClick}>地址</button>
-                <button className={styles.button}>订单</button>
+                <button className={styles.button} onClick={handleOrderClick}>订单</button>
             </div>
         </div>
     );

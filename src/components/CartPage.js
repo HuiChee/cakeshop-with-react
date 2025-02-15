@@ -4,6 +4,7 @@ import { auth, db } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, updateDoc } from "../firebase";
 import { arrayUnion, onSnapshot } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import styles from '../styles/cartPage.module.css';
 import { Timestamp } from "firebase/firestore";
 
@@ -131,9 +132,40 @@ const CartPage = () => {
         setIsPaymentModalOpen((prevState) => !prevState);
     };
 
-    const handlePayment = () => {
-        alert("下单成功！");
-        togglePaymentModal();
+    const handlePayment = async() => {
+        if(!user) return;
+
+        const userDocRef = doc(db, "users", user.uid);
+
+        const orderData = {
+            items: cartItems.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                total: item.price * item.quantity,
+            })),
+            totalAmount: totalAmount,
+            orderDate: Timestamp.fromDate(new Date()),
+            status:'待发货',
+        };
+        
+        try{
+            const ordersRef = collection(db, 'orders');
+            await addDoc(ordersRef, {
+                userId: user.uid,
+                ...orderData
+            });
+
+            await updateDoc(userDocRef, {cart: []});
+
+            alert("下单成功!");
+            setCartItems([]);
+            setTotalAmount(0);
+            togglePaymentModal();
+        } catch(error){
+            console.error('下单失败：', error);
+            alert('下单失败，请稍后重试');
+        }
     };
 
     return(
