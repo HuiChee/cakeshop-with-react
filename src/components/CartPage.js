@@ -2,7 +2,8 @@ import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "../firebase";
+import { doc, updateDoc } from "../firebase";
+import { onSnapshot } from "firebase/firestore";
 import styles from '../styles/cartPage.module.css';
 
 const CartPage = () => {
@@ -23,13 +24,20 @@ const CartPage = () => {
             if(user) {
                 setUser(user);
                 const userDocRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userDocRef);
-
+                /*const userDoc = await getDoc(userDocRef);
                 if(userDoc.exists()) {
                     const cart = userDoc.data().cart || [];
                     setCartItems(cart);
                     calculateTotal(cart);
-                }
+                }*/
+                const unsubscribeCart = onSnapshot(userDocRef, (docSnapshot) => {
+                    if(docSnapshot.exists()){
+                        const cart = docSnapshot.data().cart || [];
+                        setCartItems(cart);
+                        calculateTotal(cart);
+                    }
+                });
+                return() => unsubscribeCart();
             } else {
                 setUser(null);
                 setCartItems([]);
