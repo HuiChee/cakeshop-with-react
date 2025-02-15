@@ -85,3 +85,40 @@
 .settlement:hover{
     color: blue;
 }
+
+.paymentModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent{
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+}
+
+.closeModal{
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    background-color: red;
+    color: white;
+}
+
+.closeModal:hover{
+    color: black;
+}
+
+.confirm:hover{
+    color: blue;
+}
