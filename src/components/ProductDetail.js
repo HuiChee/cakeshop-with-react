@@ -10,6 +10,7 @@ const ProductDetail = () => {
     //console.log(productId);
     const [product, setProduct ] = useState(null);
     const [user, setUser] = useState(null);
+    const [quantity, setQuantity] = useState(1);
 
     const products = useMemo(() => [
         {name: "桂花米酒戚风蛋糕", price: "130", image: "/images/product/cake1.jpg", description: "材料详情：花蜜，干桂花，牛奶\n产品详情：需放冰箱保存，保质期3天"},
@@ -33,6 +34,14 @@ const ProductDetail = () => {
         return () => unsubscribe();
     }, [productId, products]);
 
+    const increaseQuantity = () => {
+        setQuantity(prevQuantity => prevQuantity + 1);
+    };
+
+    const decreaseQuantity = () => {
+        setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+    };
+
     const addToCart = async() => {
         if(!user){
             alert("请先登录！");
@@ -42,10 +51,21 @@ const ProductDetail = () => {
         const userDoc = await getDoc(userDocRef);
 
         if(userDoc.exists()) {
-            const productWithQuantity = {...product, quantity: 1, id: productId};
-            await updateDoc(userDocRef, {
-                cart: arrayUnion(productWithQuantity)
-            });
+            const currentCart = userDoc.data().cart || [];
+            const existingProductIndex = currentCart.findIndex(item => item.id === productId);
+            //console.log(existingProductIndex);
+            if(existingProductIndex !== -1){
+                const updateCart = [...currentCart];
+                updateCart[existingProductIndex].quantity += quantity;
+                await updateDoc(userDocRef, {
+                    cart: updateCart
+                });
+            } else {
+                const productWithQuantity = {...product, quantity, id: productId};
+                await updateDoc(userDocRef, {
+                    cart: arrayUnion(productWithQuantity)
+                });
+            }
             alert("商品已添加到购物车");
         }
     };
@@ -62,6 +82,11 @@ const ProductDetail = () => {
                     <h2 id='product-name' className={styles.productName}>{product.name}</h2>
                     <h3 id='product-price' className={styles.productPrice}>{product.price}元</h3>
                     <p id='product-description' className={styles.productDescription}>{product.description}</p>
+                    <div className={styles.quantityControl}>
+                        <button onClick={decreaseQuantity} className={styles.quantityButton}>-</button>
+                        <span className={styles.quantity}>{quantity}</span>
+                        <button onClick={increaseQuantity} className={styles.quantityButton}>+</button>
+                    </div>
                     <button className={styles.buy} type='button' onClick={addToCart}>放入购物车</button>
                 </div>
             </div>

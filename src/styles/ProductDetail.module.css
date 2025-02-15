@@ -31,6 +31,24 @@
     white-space: pre-line;
 }
 
+.quantityControl{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quanityButton{
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.quantity{
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .buy{
     font-size: 20px;
     padding: 5px 10px 5px 10px;
