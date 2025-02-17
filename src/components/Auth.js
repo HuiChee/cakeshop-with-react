@@ -1,9 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db, setDoc, doc } from '../firebase';
+import { auth, db, setDoc, doc, getDoc } from '../firebase';
 import {cloudinary} from './Cloudinary';
 import styles from '../styles/auth.module.css'
+
+const ADMIN_EMAIL = "mozi011120@gmail.com";
 
 const Auth = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
@@ -32,6 +34,7 @@ const Auth = ({ isOpen, onClose }) => {
                         username,
                         avatarURL,
                         email: user.email,
+                        isAdmin: email === ADMIN_EMAIL,
                     });
 
                     alert("注册成功");
@@ -40,8 +43,18 @@ const Auth = ({ isOpen, onClose }) => {
                     alert('请上传头像');
                 }
             } else {
-                await signInWithEmailAndPassword(auth, email, password);
-                alert("登录成功");
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if(userDoc.exists()){
+                    const userData = userDoc.data();
+                    if(userData.isAdmin){
+                        alert("管理员登录成功");
+                    }else{
+                        alert("登录成功");
+                    }
+                }
                 onClose();
             }
         } catch(error) {
