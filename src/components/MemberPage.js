@@ -47,8 +47,10 @@ const MemberPage = () => {
             </div>
             <div className={styles.username}>{userData.username}</div>
             <div className={styles.buttonContainer}>
-                <button className={styles.button} onClick={handleAddressClick}>地址</button>
-                <button className={styles.button} onClick={handleOrderClick}>订单</button>
+                {!userData.isAdmin && (
+                    <button className={styles.button} onClick={handleAddressClick}>地址</button>
+                )}
+                <button className={styles.button} onClick={handleOrderClick}>{userData.isAdmin ? '订单管理' : '订单'}</button>
             </div>
         </div>
     );
