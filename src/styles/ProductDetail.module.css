@@ -17,6 +17,16 @@
     height: auto;
 }
 
+@media(max-width: 768px){
+    .productImage{
+        margin-top: 60px;
+        margin-left: 20px;
+        margin-bottom: 50px;
+        width: 40%;
+        height: auto;
+    }
+}
+
 .productInfo{
     max-width: 500px;
 }
