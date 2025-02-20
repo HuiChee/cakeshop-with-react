@@ -60,3 +60,13 @@ body{
     color: grey;
     background-color: white;
 }
+
+@media(max-width: 768px){
+    .product-price{
+        margin-right: 265px;
+    }
+
+    .buy{
+        padding: 0px 15px;
+    }
+}
