@@ -1,0 +1,36 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/CartPage",
+        "headers": [
+          {
+            "key": "Cache-control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/ProductDetail/*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}
