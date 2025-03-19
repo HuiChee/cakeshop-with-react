@@ -1,0 +1,19 @@
+.title{
+    font-weight: bold;
+}
+
+.dropdown{
+    display: flex;
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.dropdownMenu button{
+    border: none;
+    display: block;
+    width: 100%;
+}
+
+.dropdownMenu button:hover{
+    background-color: lightgray;
+}
