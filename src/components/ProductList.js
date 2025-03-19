@@ -23,6 +23,7 @@ const ProductList = ({filter, onResetFilter}) => {
     const [currentProducts, setCurrentProducts] = useState([]);
 
     useEffect(() => {
+
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = Math.min(startIndex + itemsPerPage, filteredProducts.length);
         const newProducts = filteredProducts.slice(startIndex, endIndex);
@@ -31,15 +32,28 @@ const ProductList = ({filter, onResetFilter}) => {
             setCurrentProducts(newProducts);
         }
 
-        window.scrollTo(0, window.scrollY);
+        //window.scrollTo(0, window.scrollY);
+
     }, [currentPage, filter, filteredProducts, currentProducts]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filter]);
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        const productContainer = document.getElementById('product-container');
+        if(productContainer){
+            productContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    };
 
     const renderPagination = () => {
         let paginationButtons = [];
 
         if (currentPage > 1) {
             paginationButtons.push(
-                <button key="prev" onClick={() => setCurrentPage(currentPage - 1)}>上一页</button>
+                <button key="prev" onClick={() => handlePageChange(currentPage - 1)}>上一页</button>
             );
         }
 
@@ -47,7 +61,7 @@ const ProductList = ({filter, onResetFilter}) => {
             paginationButtons.push(
                 <button 
                 key={i}
-                onClick={() => setCurrentPage(i)}
+                onClick={() => handlePageChange(i)}
                 style={{border: "none", backgroundColor: "white", color: i === currentPage ? "blue" : "black"}}>
                     {i}
                 </button>
@@ -56,16 +70,12 @@ const ProductList = ({filter, onResetFilter}) => {
 
         if (currentPage < totalPages) {
             paginationButtons.push(
-                <button key="next" onClick={() => setCurrentPage(currentPage + 1)}>下一页</button>
+                <button key="next" onClick={() => handlePageChange(currentPage + 1)}>下一页</button>
             );
         }
 
         return paginationButtons;
     };
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [filter]);
 
     //const navigate = useNavigate();
 

@@ -28,11 +28,6 @@ body{
     align-items: center;
 }
 
-.product-price{
-    margin-left: 36px;
-    margin-right: 100px;
-}
-
 .buy{
     font-weight: bold;
 }
@@ -64,5 +59,12 @@ body{
 @media(max-width: 768px){
     .product-price{
         margin-right: 190px;
+    }
+}
+
+@media(min-width: 1025px){
+    .product-price{
+        margin-left: 36px;
+        margin-right: 100px;
     }
 }
